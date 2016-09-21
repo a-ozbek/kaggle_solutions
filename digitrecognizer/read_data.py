@@ -20,3 +20,4 @@ for r in train.iterrows():
     bar.update(n_row+1)
 print 'Done.'
 print 'len(im_and_label):', len(im_and_label)
+
