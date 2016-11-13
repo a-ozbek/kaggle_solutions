@@ -3,6 +3,7 @@
 ```python
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import Imputer
 import matplotlib.pyplot as plt
 ```
 
@@ -12,7 +13,7 @@ df_train = pd.read_csv('./train.csv')
 df_test = pd.read_csv('./test.csv')
 ```
 
-# Analyzation of the data
+# Analyzation of the Titanic Data
 
 
 ```python
@@ -196,7 +197,7 @@ plt.show()
 ![png](output_8_0.png)
 
 
-## Gender and Age
+## Female Gender and Age
 I will analyze the age distribution of the females by survived or not survived
 
 
@@ -255,9 +256,94 @@ plt.show()
 ![png](output_13_0.png)
 
 
+## Survival Rate Based on Socio-Economic Status (Pclass)
+
+
+```python
+p_class = df_train['Pclass'].value_counts()
+p_class_survivors = df_train[df_train['Survived'] == 1]['Pclass'].value_counts()
+p_class_deaths = p_class - p_class_survivors
+
+p_class = p_class.sort_index()
+p_class_survivors = p_class_survivors.sort_index()
+p_class_deaths = p_class_deaths.sort_index()
+
+p_class = p_class.rename({1:'Upper Class', 2:'Middle Class', 3:'Lower Class'})
+p_class_survivors = p_class_survivors.rename({1:'Upper Class', 2:'Middle Class', 3:'Lower Class'})
+p_class_deaths = p_class_deaths.rename({1:'Upper Class', 2:'Middle Class', 3:'Lower Class'})
+```
+
+
+```python
+# Plot
+p_class_survivors.plot(kind='bar', color='blue')
+p_class_deaths.plot(kind='bar', color='red', bottom=p_class_survivors, rot=0)
+plt.legend(['Survivors', 'Deaths'], loc='best')
+
+rate_upper_survivor = int(round((p_class_survivors['Upper Class'] / float(p_class['Upper Class'])) * 100))
+rate_middle_survivor = int(round((p_class_survivors['Middle Class'] / float(p_class['Middle Class'])) * 100))
+rate_lower_survivor = int(round((p_class_survivors['Lower Class'] / float(p_class['Lower Class'])) * 100))
+
+plt.text(0, p_class['Upper Class'] + 10, str(rate_upper_survivor) + '%')
+plt.text(1, p_class['Middle Class'] + 10, str(rate_middle_survivor) + '%')
+plt.text(2, p_class['Lower Class'] + 10, str(rate_lower_survivor) + '%')
+plt.ylim([0, np.max(p_class) + 40])
+plt.title('Survival Rate According to Class')
+
+plt.show()
+```
+
+
+![png](output_16_0.png)
+
+
 # Classification
 
 
 ```python
+# Dropping 'Cabin', 'Ticket', 'Name' columns
+df_train = df_train.drop(['Cabin','Ticket', 'Name', 'Embarked'], axis=1)
+df_test = df_test.drop(['Cabin', 'Ticket', 'Name', 'Embarked'], axis=1)
 
+# Impute 'Age'
+df_train['Age'].fillna(df_train['Age'].mean(), inplace=True)
+df_test['Age'].fillna(df_test['Age'].mean(), inplace=True)
+# Impute 'Fare' on test set
+df_test['Fare'].fillna(df_test['Fare'].mean(), inplace=True)
+
+# One-hot encodings
+# Sex
+df_train = pd.concat([df_train.drop(['Sex'], axis=1), pd.get_dummies(df_train['Sex'])], axis=1)
+df_test = pd.concat([df_test.drop(['Sex'], axis=1), pd.get_dummies(df_test['Sex'])], axis=1)
+# Pclass
+df_train = pd.concat([df_train.drop(['Pclass'], axis=1), pd.get_dummies(df_train['Pclass'])], axis=1)
+df_test = pd.concat([df_test.drop(['Pclass'], axis=1), pd.get_dummies(df_test['Pclass'])], axis=1)
+```
+
+
+```python
+# Classification
+y_train = df_train['Survived']
+X_train = df_train.drop(['Survived'], axis=1)
+X_test = df_test
+
+from sklearn.ensemble import RandomForestClassifier
+rf_model = RandomForestClassifier()
+rf_model.fit(X_train, y_train)
+y_train_pred = rf_model.predict(X_train)
+print 'Train Accuracy:', np.sum(y_train == y_train_pred) / float(len(y_train))
+
+y_test_pred = rf_model.predict(X_test)
+```
+
+    Train Accuracy: 0.986531986532
+
+
+
+```python
+submission_df = pd.DataFrame()
+submission_df['PassengerId'] = df_test['PassengerId']
+submission_df['Survived'] = y_test_pred
+
+submission_df.to_csv('titanic_submission.csv', index=False)
 ```
