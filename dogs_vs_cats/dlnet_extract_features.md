@@ -13,14 +13,14 @@
 
 * [Extract Features from VGG16](#extract-features-from-vgg16)  
 * [Classification](#classification)
-  1. [kNN](#1.-knn)  
-  2. [Logistic Regression](#2.-logistic-regression)  
-  3. [SVM](#3.-svm)  
-  4. [PCA and SVM](#4.-pca-and-svm)  
-  5. [LDA and SVM](#5.-lda-and-svm)
-  6. [LDA and Logistic Regression](#6.-lda-and-logistic-regression)
-  7. [Fully Connected Neural Net](#7.-fully-connected-neural-net)
-  8. [Random Forest](#8.-random-forest)
+  1. [kNN](#1-knn)  
+  2. [Logistic Regression](#2-logistic-regression)  
+  3. [SVM](#3-svm)  
+  4. [PCA and SVM](#4-pca-and-svm)  
+  5. [LDA and SVM](#5-lda-and-svm)
+  6. [LDA and Logistic Regression](#6-lda-and-logistic-regression)
+  7. [Fully Connected Neural Net](#7-fully-connected-neural-net)
+  8. [Random Forest](#8-random-forest)
 
 ## Extract Features from VGG16
 
@@ -168,14 +168,14 @@ print 'X_test_fc1.shape:', X_test_f.shape
 
 ## Classification
 
-1. [kNN](#1.-knn)  
-2. [Logistic Regression](#2.-logistic-regression)  
-3. [SVM](#3.-svm)  
-4. [PCA and SVM](#4.-pca-and-svm)  
-5. [LDA and SVM](#5.-lda-and-svm)
-6. [LDA and Logistic Regression](#6.-lda-and-logistic-regression)
-7. [Fully Connected Neural Net](#7.-fully-connected-neural-net)
-8. [Random Forest](#8.-random-forest)
+1. [kNN](#1-knn)  
+2. [Logistic Regression](#2-logistic-regression)  
+3. [SVM](#3-svm)  
+4. [PCA and SVM](#4-pca-and-svm)  
+5. [LDA and SVM](#5-lda-and-svm)
+6. [LDA and Logistic Regression](#6-lda-and-logistic-regression)
+7. [Fully Connected Neural Net](#7-fully-connected-neural-net)
+8. [Random Forest](#8-random-forest)
 
 
 ```python
