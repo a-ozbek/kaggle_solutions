@@ -1,7 +1,7 @@
 
 # Extract Features from VGG16net and Classify
 
-####  Here is my work on Dogs vs. Kats dataset from Kaggle. https://www.kaggle.com/c/dogs-vs-cats-redux-kernels-edition  
+####  Here is my work on Dogs vs. Cats dataset from Kaggle. https://www.kaggle.com/c/dogs-vs-cats-redux-kernels-edition  
 * I used pre-trained VGG16net as feature extractor, obtained 4096 dimensional vectors for each image and then applied various classifiers to get a good score.
 * So far, I got the best score by applying LDA and then Logistic Regression. This method gave 0.07371 log_loss, which makes top 11% ranking in Kaggle for now.
 * The notebook is kinda messy, I am planning to clean it up a little bit.
