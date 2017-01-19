@@ -4,6 +4,7 @@
 ####  Here is my work on Dogs vs. Cats dataset from Kaggle. https://www.kaggle.com/c/dogs-vs-cats-redux-kernels-edition  
 * I used pre-trained VGG16net as feature extractor, obtained 4096 dimensional vectors for each image and then applied various classifiers to get a good score.
 * So far, I got the best score by applying Xgboost. This method gave 0.06846 log_loss, which makes top 10% ranking in Kaggle for now.
+* Keras is used for deep learning framework.
 
 ---
 
