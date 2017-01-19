@@ -3,9 +3,7 @@
 
 ####  Here is my work on Dogs vs. Cats dataset from Kaggle. https://www.kaggle.com/c/dogs-vs-cats-redux-kernels-edition  
 * I used pre-trained VGG16net as feature extractor, obtained 4096 dimensional vectors for each image and then applied various classifiers to get a good score.
-* So far, I got the best score by applying LDA and then Logistic Regression. This method gave 0.07371 log_loss, which makes top 11% ranking in Kaggle for now.
-* The notebook is kinda messy, I am planning to clean it up a little bit.
-* I love [Keras](https://github.com/fchollet/keras)  
+* So far, I got the best score by applying Xgboost. This method gave 0.06846 log_loss, which makes top 10% ranking in Kaggle for now.
 
 ---
 
@@ -21,6 +19,7 @@
   6. [LDA and Logistic Regression](#6-lda-and-logistic-regression)
   7. [Fully Connected Neural Net](#7-fully-connected-neural-net)
   8. [Random Forest](#8-random-forest)
+  9. [Xgboost](#9-xgboost)
 
 ## Extract Features from VGG16
 
@@ -45,7 +44,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.decomposition import PCA
-# Preprocessing
+import xgboost as xgb
+# Preprocessing 
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -901,6 +901,52 @@ h = df.to_csv('kg_dogcat_sub2.csv', index = False)
 ```
 
 
-```python
+### 9. Xgboost
 
+
+```python
+skf = cross_validation.StratifiedKFold(y_train, n_folds=5, shuffle=True)
+cv_scores = []
+for train_index, val_index in skf:
+    # Get X, y
+    X_train_, y_train_ = X_train_f[train_index], y_train[train_index]
+    X_test_, y_test_   = X_train_f[val_index], y_train[val_index]    
+    
+    # Define model
+    model_xgb = xgb.XGBClassifier(max_depth=10)    
+    
+    # Fit the model on training data
+    model_xgb.fit(X_train_, y_train_)    
+    
+    # Predict the test data
+    y_test_p = model_xgb.predict_proba(X_test_)[:,1]   
+    
+    # Get the score
+    score = metrics.log_loss(y_test_, y_test_p)
+    print 'score:', score
+    cv_scores.append(score)
+
+print 'cv_scores:', cv_scores
+print 'np.mean(cv_scores):', np.mean(cv_scores)
 ```
+
+```python
+# --- Submission --- 
+# Define the model
+model_xgb = xgb.XGBClassifier()
+# Fit on train
+model_xgb.fit(X_train_f, y_train)
+# Predict 
+y_test_p = model_xgb.predict_proba(X_test_f)[:,1]
+# Create submission file
+id_column = range(1, len(y_test_p)+1)
+predictions_column = y_test_p
+#
+df = pd.DataFrame()
+df['id'] = id_column
+df['label'] = predictions_column
+#
+h = df.to_csv('../submission_files/kg_dogcat_subXGB1.csv', index = False)
+print 'Done.'
+```
+
