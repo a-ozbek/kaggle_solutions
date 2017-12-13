@@ -1,0 +1,49 @@
+* Try sub12.csv, try it with different weights 
+model1, model3 are good. Increase weight of model3
+
+* Try a different combination of submissions
+
+
+--------------
+
+* Try without augmentation
+
+-------------
+
+* Batch Normalization
+* Inception Module
+
+
+-------------
+
+I would suggest to first find a model that is able to reach relative low training loss (0.05 or so) and then add Dropout, Data Augmentation etc. I use a vgg like network if one can call it so just about 4 layers deep (conv, maxpool) and i personally did not experienced underfitting, however heavy overfitting. Adam lr = 0.0001
+
+------------
+
+df['not_machine_generated'] = df['inc_angle'].apply(lambda x: len(str(x))) <= 7
+
+
+-----------
+
+Add smoothed, derivative images to CNN
+
+
+-----------
+
+Add more testing data to training data
+* Pick not machine generated images from test data and add to training (tried, did not give good results)
+* Added 0.1 margin sure samples from dataset (made it better)
+* Increase the margin (tried, did not make it better)
+* Decrease the margin (tried, did not make it better)
+* Add more of the test data (maybe all)
+
+
+-----------
+
+From the recent notebook (2-cnn-bagging-v6)
+Try to push the current result (fine-tune, change the parameters etc.)
+
+
+
+
+
