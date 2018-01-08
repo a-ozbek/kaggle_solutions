@@ -1,2 +1,0 @@
-Best working version: v3
-TODO: Add more LeakyReLU etc.
