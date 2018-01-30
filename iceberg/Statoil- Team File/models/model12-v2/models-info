@@ -1,0 +1,49 @@
+*** CNN Architecture: ***
+def get_model(input_shape):
+    # Architecture
+    model = Sequential()
+    # Block 1
+    model.add(Conv2D(32, kernel_size=(3, 3),
+                     activation='relu',
+                     input_shape=input_shape))
+    model.add(Dropout(0.25))
+    # Block 2
+    model.add(Conv2D(64, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    # Block 3
+    model.add(Conv2D(128, (3, 3), activation='relu'))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.25))
+    # Block 4
+    model.add(Conv2D(256, (3, 3)))
+    model.add(LeakyReLU())          
+    model.add(MaxPooling2D(pool_size=(2, 2)))
+    model.add(Dropout(0.5))
+    # FC
+    model.add(Flatten())
+    model.add(Dense(32))
+    model.add(LeakyReLU())
+    model.add(Dropout(0.5))
+    model.add(Dense(1, activation='sigmoid'))
+    
+    # Compile the model
+    loss = losses.binary_crossentropy
+    optimizer = optimizers.Adam()
+    metrics = ['accuracy']
+    model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+    
+    #     
+    return model
+
+
+*** Best val_loss: ***
+Model1: 0.1018
+Model2: 0.1176
+Model3: 0.0922 
+Model4: 0.1084
+Model5: 0.0980
+
+
+*** Notes: ***
+- Get stack_minmax_bestbase.csv and get 0.1 sure margin, add it to the training data

@@ -1,0 +1,93 @@
+*** XGB Architecture: ***
+dx1 = xgb.DMatrix(X_train, y_train)
+dx2 = xgb.DMatrix(X_val, y_val)
+
+watchlist = [(dx2, 'valid')]
+print("XGB modeling has started..")
+        # depth=4 best
+
+params = {'eta': 0.01, 'max_depth': 5, 'subsample': 0.8, 'colsample_bytree': 0.01,
+                  'objective': 'binary:logistic',
+                  'eval_metric': 'logloss', 'seed': 99, 'silent': True, 'reg_lambda': 0}
+
+model = xgb.train(params, dx1, 5000, watchlist, maximize=False, verbose_eval=100,
+                          early_stopping_rounds=200)
+
+pred_val_xgb = model.predict(xgb.DMatrix(X_val), ntree_limit=model.best_ntree_limit)
+print('XGB Result:' + str(log_loss(y_val, pred_val_xgb)))  # ('gini', 0.28484043572763312)
+        xgb_results.append(log_loss(y_val, pred_val_xgb))
+
+
+
+# Test
+pred_test_xgb += model.predict(xgb.DMatrix(test_xgb), ntree_limit=model.best_ntree_limit) / (N_SPLITS*len(mn_list))
+
+print('LogisticRegression has started..')
+lr = LogisticRegression(class_weight='balanced', penalty='l2', C=0.014)
+
+lr.fit(X_train, y_train)
+pred_val_lr = lr.predict_proba(X_val)[:, 1]
+print('LogReg Result: ' + str(log_loss(y_val, pred_val_lr)))
+logreg_results.append(log_loss(y_val, pred_val_lr))
+# All
+
+# Test
+pred_test_lr += lr.predict_proba(test_xgb)[:, 1] / (N_SPLITS*len(mn_list))
+
+
+*** Best XGB val_loss: ***
+Model1: 0.0769
+Model2: 0.0920
+Model3: 0.0612 
+Model4: 0.0911
+Model5: 0.0805
+
+*** Best LogReg val_loss: ***
+Model1: 0.0877
+Model2: 0.1011
+Model3: 0.0633 
+Model4: 0.1066
+Model5: 0.0972
+
+*** CV mean Std ***
+MODEL_NUMBER:1
+XGB Results: 
+Mean: 0.0926236654845
+Std: 0.0126440216972
+LogReg Results: 
+Mean: 0.0999030624479
+Std: 0.013385599108
+
+MODEL_NUMBER:2
+XGB Results: 
+Mean: 0.10444310601
+Std: 0.0135624006662
+LogReg Results: 
+Mean: 0.110852692211
+Std: 0.00942315596888
+
+MODEL_NUMBER:3
+XGB Results: 
+Mean: 0.0789356189595
+Std: 0.0128611110321
+LogReg Results: 
+Mean: 0.0771808203306
+Std: 0.0115943606458
+
+MODEL_NUMBER:4
+XGB Results: 
+Mean: 0.104602165651
+Std: 0.0148244153453
+LogReg Results: 
+Mean: 0.118804085662
+Std: 0.012931908964
+
+MODEL_NUMBER:5
+XGB Results: 
+Mean: 0.0965444006712
+Std: 0.012631227737
+LogReg Results: 
+Mean: 0.107340983235
+Std: 0.00962493669513
+
+
